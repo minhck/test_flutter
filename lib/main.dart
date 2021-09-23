@@ -45,23 +45,9 @@ class _MyHomePageState extends State<MyHomePage> {
       appBar: AppBar(
         title: Text(widget.title),
       ),
-      // body: Center(
-      //   child: Column(
-      //     mainAxisAlignment: MainAxisAlignment.center,
-      //     children: <Widget>[
-      //       const Text(
-      //         'You have pushed the button this many times:',
-      //       ),
-      //       Text(
-      //         '$_counter',
-      //         style: Theme.of(context).textTheme.headline4,
-      //       ),
-      //     ],
-      //   ),
-      // ),
-      body: MyCenterWidget(
-        counter: _counter,
-        key: null,
+      body: MyInheritedWidget(
+        child: MyCenterWidget(),
+        myData: _counter,
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: _incrementCounter,
@@ -73,35 +59,43 @@ class _MyHomePageState extends State<MyHomePage> {
 }
 
 class MyCenterWidget extends StatelessWidget {
-  const MyCenterWidget({
-    Key? key,
-    required this.counter,
-  }) : super(key: key);
-
-  // data này vô nghĩa vì đúng bản chất thì MyCenterWidget ko cần nó
-  final int counter;
-
   @override
   Widget build(BuildContext context) {
     // ignore: avoid_print
     print('MyCenterWidget');
     return Center(
-      // tiếp tục truyền data từ widget MyCenterWidget xuống MyText
-      child: MyText(counter: counter),
+      child: MyText(),
     );
   }
 }
 
 class MyText extends StatelessWidget {
-  const MyText({Key? key, required this.counter}) : super(key: key);
-
-  // chỉ có MyText mới thật sự cần data này
-  final int counter;
-
   @override
   Widget build(BuildContext context) {
     // ignore: avoid_print
     print('MyText');
+
+    final counter = MyInheritedWidget.of(context).myData;
     return Text('Tui là widget Text. Data của tui hiện tại là: $counter');
   }
+}
+
+class MyInheritedWidget extends InheritedWidget {
+  const MyInheritedWidget({
+    Key? key,
+    required this.myData,
+    required Widget child,
+  }) : super(key: key, child: child);
+
+  final int myData;
+
+  static MyInheritedWidget of(BuildContext context) {
+    final MyInheritedWidget? result =
+        context.dependOnInheritedWidgetOfExactType<MyInheritedWidget>();
+    assert(result != null, 'No FrogColor found in context');
+    return result!;
+  }
+
+  @override
+  bool updateShouldNotify(MyInheritedWidget old) => myData != old.myData;
 }
