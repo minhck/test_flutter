@@ -75,7 +75,7 @@ class MyText extends StatelessWidget {
     // ignore: avoid_print
     print('MyText');
 
-    final counter = MyInheritedWidget.of(context).myData;
+    final counter = MyInheritedWidget.of(context)!.myData;
     return Text('Tui là widget Text. Data của tui hiện tại là: $counter');
   }
 }
@@ -89,11 +89,12 @@ class MyInheritedWidget extends InheritedWidget {
 
   final int myData;
 
-  static MyInheritedWidget of(BuildContext context) {
-    final MyInheritedWidget? result =
-        context.dependOnInheritedWidgetOfExactType<MyInheritedWidget>();
-    assert(result != null, 'No FrogColor found in context');
-    return result!;
+  static MyInheritedWidget? of(BuildContext context) {
+    // final MyInheritedWidget? result =
+    //     context.dependOnInheritedWidgetOfExactType<MyInheritedWidget>();
+    // assert(result != null, 'No MyInheritedWidget found in context');
+    // return result!;
+    return context.dependOnInheritedWidgetOfExactType<MyInheritedWidget>();
   }
 
   @override
